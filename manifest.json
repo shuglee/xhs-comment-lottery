@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "小红书抽奖助手",
+  "version": "0.1.0",
+  "description": "从当前小红书帖子的一级评论中，按用户 ID 去重并随机抽取中奖者。",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "打开或关闭小红书抽奖助手"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["sidepanel.html", "sidepanel.css", "sidepanel.js"],
+      "matches": ["https://www.xiaohongshu.com/*", "https://xiaohongshu.com/*"]
+    }
+  ]
+}

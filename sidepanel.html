@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>小红书抽奖助手</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="icon-gift" viewBox="0 0 24 24"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.7A2.7 2.7 0 1 1 12 4.3V7Zm0 0h4.3A2.7 2.7 0 1 0 12 4.3V7Z"/></symbol>
+      <symbol id="icon-arrow-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6M9 12h11"/></symbol>
+      <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0V4ZM9 20h6M12 13v7M8 6H4v2a4 4 0 0 0 4 4M16 6h4v2a4 4 0 0 1-4 4"/></symbol>
+      <symbol id="icon-rotate" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 6.3M20 4v7h-7"/></symbol>
+      <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+      <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+      <symbol id="icon-loader" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 1-9 9"/></symbol>
+    </svg>
+    <main class="app">
+      <header class="topbar">
+        <button id="backButton" class="icon-button hidden" type="button" aria-label="返回设置"><svg><use href="#icon-arrow-left"/></svg></button>
+        <div class="brand"><svg class="gift"><use href="#icon-gift"/></svg><span>小红书抽奖助手</span></div>
+        <button id="closeButton" class="icon-button close-button" type="button" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      </header>
+
+      <section id="setupView" class="view">
+        <div id="postCard" class="post-card checking">
+          <div id="statusIcon" class="status-icon"><svg><use id="statusIconUse" href="#icon-loader"/></svg></div>
+          <div class="post-copy">
+            <strong id="postStatus">正在识别当前帖子</strong>
+            <span id="postDetail">请保持小红书帖子页面打开</span>
+          </div>
+          <img id="postCover" class="post-cover hidden" alt="帖子封面" />
+        </div>
+
+        <section class="section">
+          <h2>抽奖设置</h2>
+          <label class="field-label">中奖人数 <span>Winners</span></label>
+          <div id="winnerOptions" class="winner-options" role="group" aria-label="中奖人数">
+            <button class="choice selected" type="button" data-count="1">1人</button>
+            <button class="choice" type="button" data-count="2">2人</button>
+            <button class="choice" type="button" data-count="3">3人</button>
+            <button class="choice" type="button" data-count="5">5人</button>
+            <input id="customCount" class="choice custom-count-inline" type="number" min="1" max="100" inputmode="numeric" placeholder="自定义" data-count="custom" aria-label="自定义中奖人数" />
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title-row">
+            <h2>参与条件 <span>Eligibility</span></h2>
+            <div class="rules-help">
+              <button class="rules-help-button" type="button" aria-label="查看内置规则" aria-describedby="rulesTooltip"><svg><use href="#icon-info"/></svg></button>
+              <div id="rulesTooltip" class="rules-tooltip" role="tooltip">
+                <strong>内置规则</strong>
+                <p><svg><use href="#icon-check"/></svg><span>仅统计一级评论，楼中楼回复不参与</span></p>
+                <p><svg><use href="#icon-check"/></svg><span>同一账号多次评论，仅获得一次机会</span></p>
+                <p><svg><use href="#icon-check"/></svg><span>以 User ID 去重</span></p>
+                <p><svg><use href="#icon-check"/></svg><span>默认排除帖子作者本人</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div><strong>仅限粉丝（测试）</strong><small>抽中后验证，非粉丝自动重抽</small></div>
+            <input id="followersOnly" type="checkbox" aria-label="仅限粉丝" />
+          </div>
+        </section>
+
+        <div id="errorBox" class="error hidden" role="alert"></div>
+        <button id="drawButton" class="primary" type="button" disabled>开始抽奖</button>
+        <p class="privacy"><svg><use href="#icon-lock"/></svg><span>抽奖过程在本地完成，结果仅你可见</span></p>
+      </section>
+
+      <section id="loadingView" class="view loading-view hidden" aria-live="polite">
+        <div class="spinner"></div>
+        <h1>正在准备抽奖</h1>
+        <p id="loadingText">正在读取当前帖子的一级评论…</p>
+      </section>
+
+      <section id="resultView" class="view result-view hidden">
+        <div class="trophy"><svg><use href="#icon-trophy"/></svg></div>
+        <h1>Winners</h1>
+        <p id="resultSummary" class="summary"></p>
+        <div id="winnerGrid" class="winner-grid"></div>
+        <p id="conflictNotice" class="notice hidden">有效奖池中存在重名账号，已显示 User ID 以便区分</p>
+        <div class="actions">
+          <button id="redrawButton" class="secondary" type="button"><svg><use href="#icon-rotate"/></svg><span>重新抽奖</span></button>
+          <button id="copyButton" class="primary" type="button"><svg><use href="#icon-copy"/></svg><span>复制结果</span></button>
+        </div>
+        <p id="copyStatus" class="privacy" aria-live="polite"><svg><use href="#icon-lock"/></svg><span id="copyStatusText">关闭后，在当前帖子重新打开仍可查看</span></p>
+      </section>
+    </main>
+    <script src="sidepanel.js"></script>
+  </body>
+</html>

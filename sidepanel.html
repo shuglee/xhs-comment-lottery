@@ -17,6 +17,7 @@
       <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
       <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
       <symbol id="icon-loader" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 1-9 9"/></symbol>
+      <symbol id="icon-external-link" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8"/><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
     </svg>
     <main class="app">
       <header class="topbar">
@@ -44,6 +45,15 @@
             <button class="choice" type="button" data-count="3">3人</button>
             <button class="choice" type="button" data-count="5">5人</button>
             <input id="customCount" class="choice custom-count-inline" type="number" min="1" max="100" inputmode="numeric" placeholder="自定义" data-count="custom" aria-label="自定义中奖人数" />
+          </div>
+        </section>
+
+        <section class="section message-section">
+          <label class="field-label" for="winnerMessage">中奖文案 <span>Message</span></label>
+          <textarea id="winnerMessage" maxlength="2000" rows="4" placeholder="例如：恭喜 {winners} 中奖！请私信联系领取奖品。"></textarea>
+          <div class="field-meta">
+            <small>支持 {winners}、{count}、{post}，自动保存在本地</small>
+            <small id="messageSaveStatus" aria-live="polite"></small>
           </div>
         </section>
 
@@ -86,7 +96,7 @@
         <p id="conflictNotice" class="notice hidden">有效奖池中存在重名账号，已显示 User ID 以便区分</p>
         <div class="actions">
           <button id="redrawButton" class="secondary" type="button"><svg><use href="#icon-rotate"/></svg><span>重新抽奖</span></button>
-          <button id="copyButton" class="primary" type="button"><svg><use href="#icon-copy"/></svg><span>复制结果</span></button>
+          <button id="copyButton" class="primary" type="button"><svg aria-hidden="true"><use href="#icon-copy"/></svg><span>复制中奖文案</span></button>
         </div>
         <p id="copyStatus" class="privacy" aria-live="polite"><svg><use href="#icon-lock"/></svg><span id="copyStatusText">关闭后，在当前帖子重新打开仍可查看</span></p>
       </section>

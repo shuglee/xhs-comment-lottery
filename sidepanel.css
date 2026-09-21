@@ -3,6 +3,7 @@
 html, body { width: 100%; height: 100%; background: #fff; }
 body { margin: 0; overflow-y: auto; }
 button, input { font: inherit; }
+textarea { font: inherit; }
 .app { width: 100%; min-height: 100%; background: #fff; }
 .topbar { height: 58px; padding: 0 17px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #e8eaed; position: sticky; top: 0; z-index: 4; background: rgba(255,255,255,.96); }
 .brand { display: flex; gap: 9px; align-items: center; font-size: 17px; font-weight: 750; }
@@ -55,6 +56,12 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .setting-row strong { font-size: 14px; }
 .setting-row small { color: #8b929a; }
 .setting-row.disabled { color: #8b929a; background: #fafafa; }
+.message-section textarea { width: 100%; min-height: 92px; padding: 11px 12px; resize: vertical; border: 1px solid #dfe2e6; border-radius: 10px; color: #252a30; background: #fff; line-height: 1.55; outline: none; }
+.message-section textarea:hover { border-color: #c7cbd1; }
+.message-section textarea:focus { border-color: #ff2442; box-shadow: 0 0 0 3px rgba(255,36,66,.1); }
+.message-section textarea::placeholder { color: #9aa0a7; }
+.field-meta { min-height: 18px; margin-top: 6px; display: flex; justify-content: space-between; gap: 10px; color: #818891; font-size: 11px; line-height: 1.45; }
+#messageSaveStatus { flex: 0 0 auto; color: #18a963; }
 #followersOnly { width: 42px; height: 24px; margin: 0; appearance: none; border-radius: 13px; background: #d9dde2; position: relative; cursor: pointer; transition: background .18s ease; }
 #followersOnly::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(20,24,28,.22); transition: transform .18s ease; }
 #followersOnly:checked { background: #ff2442; }
@@ -87,6 +94,10 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .winner-rank { display: inline-grid; place-items: center; min-width: 27px; height: 27px; padding: 0 7px; margin-top: -25px; position: relative; border-radius: 15px; background: #ffca45; border: 2px solid white; font-weight: 750; font-size: 12px; }
 .winner-card h3 { margin: 8px 0 3px; overflow-wrap: anywhere; font-size: 16px; }
 .winner-card p { margin: 0; font-size: 11px; color: #7c848d; overflow-wrap: anywhere; }
+.winner-profile-link { min-height: 38px; margin: 10px auto 0; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; border: 1px solid #dfe2e6; border-radius: 9px; color: #3e454d; background: #fff; font-size: 12px; font-weight: 650; text-decoration: none; transition: border-color .15s ease, color .15s ease, background .15s ease; }
+.winner-profile-link:hover { border-color: #ff8b9c; color: #e91e3b; background: #fff7f8; }
+.winner-profile-link:focus-visible { outline: 2px solid rgba(255,36,66,.35); outline-offset: 2px; }
+.winner-profile-link svg { width: 14px; height: 14px; }
 .notice { padding: 10px 12px; margin: 16px 0 0; border-radius: 9px; color: #935a00; background: #fff8e6; font-size: 12px; line-height: 1.5; }
 .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 19px; }
 .secondary { background: white; border: 1px solid #dfe2e6; color: #272b30; }

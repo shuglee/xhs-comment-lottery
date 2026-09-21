@@ -1,3 +1,5 @@
+const DEFAULT_WINNER_MESSAGE = "恭喜 {winners} 中奖！请私信联系领取奖品。";
+
 const state = {
   tabId: null,
   post: null,
@@ -5,7 +7,8 @@ const state = {
   excludedUserIds: new Set(),
   currentWinners: [],
   winnerCount: 1,
-  followersOnly: false
+  followersOnly: false,
+  winnerMessage: DEFAULT_WINNER_MESSAGE
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -121,6 +124,33 @@ function currentResultPool() {
   );
 }
 
+function profileUrl(userId) {
+  return `https://www.xiaohongshu.com/user/profile/${encodeURIComponent(userId)}`;
+}
+
+function winnerLabels(pool = currentResultPool()) {
+  const conflicts = nicknameConflicts(pool);
+  return state.currentWinners.map((winner) =>
+    conflicts.get(winner.nickname) > 1 ? `${winner.nickname}（User ID: ${winner.userId}）` : winner.nickname
+  );
+}
+
+function buildWinnerMessage() {
+  const labels = winnerLabels();
+  const template = state.winnerMessage.trim() || DEFAULT_WINNER_MESSAGE;
+  const replacements = {
+    "{winners}": labels.join("、"),
+    "{count}": String(labels.length),
+    "{post}": state.post?.title || "当前帖子"
+  };
+  let message = template;
+  for (const [placeholder, value] of Object.entries(replacements)) {
+    message = message.split(placeholder).join(value);
+  }
+  if (!template.includes("{winners}")) message += `\n中奖用户：${labels.join("、")}`;
+  return message;
+}
+
 function renderWinners(winners, eligiblePool) {
   const grid = $("#winnerGrid");
   const conflicts = nicknameConflicts(eligiblePool);
@@ -140,6 +170,15 @@ function renderWinners(winners, eligiblePool) {
     if (conflicts.get(winner.nickname) > 1) {
       card.append(Object.assign(document.createElement("p"), { textContent: `User ID: ${winner.userId}` }));
     }
+    const profileLink = Object.assign(document.createElement("a"), {
+      className: "winner-profile-link",
+      href: profileUrl(winner.userId),
+      target: "_blank",
+      rel: "noopener noreferrer"
+    });
+    profileLink.setAttribute("aria-label", `查看 ${winner.nickname} 的小红书主页`);
+    profileLink.innerHTML = '<span>查看主页</span><svg aria-hidden="true"><use href="#icon-external-link"/></svg>';
+    card.append(profileLink);
     grid.append(card);
   });
   const summary = $("#resultSummary");
@@ -258,6 +297,21 @@ $("#followersOnly").addEventListener("change", (event) => {
   setError();
   state.followersOnly = event.target.checked;
 });
+
+let messageSaveTimer;
+async function saveWinnerMessage() {
+  clearTimeout(messageSaveTimer);
+  await chrome.storage.local.set({ winnerMessageTemplate: state.winnerMessage });
+  $("#messageSaveStatus").textContent = "已保存";
+}
+
+$("#winnerMessage").addEventListener("input", (event) => {
+  state.winnerMessage = event.target.value;
+  $("#messageSaveStatus").textContent = "保存中…";
+  clearTimeout(messageSaveTimer);
+  messageSaveTimer = setTimeout(saveWinnerMessage, 350);
+});
+$("#winnerMessage").addEventListener("change", saveWinnerMessage);
 drawButton.addEventListener("click", () => { state.winnerCount = selectedCount(); performDraw({ recollect: true }); });
 $("#redrawButton").addEventListener("click", () => performDraw());
 backButton.addEventListener("click", () => showView("setup"));
@@ -266,13 +320,12 @@ $("#closeButton").addEventListener("click", () => {
 });
 
 $("#copyButton").addEventListener("click", async () => {
-  const conflicts = nicknameConflicts(currentResultPool());
-  const lines = state.currentWinners.map((winner, index) => {
-    const suffix = conflicts.get(winner.nickname) > 1 ? ` (User ID: ${winner.userId})` : "";
-    return `${index + 1}. ${winner.nickname}${suffix}`;
-  });
-  await navigator.clipboard.writeText(`Winners\n${lines.join("\n")}`);
-  $("#copyStatusText").textContent = "中奖结果已复制到剪贴板";
+  try {
+    await navigator.clipboard.writeText(buildWinnerMessage());
+    $("#copyStatusText").textContent = "中奖文案已复制到剪贴板";
+  } catch {
+    $("#copyStatusText").textContent = "复制失败，请重试";
+  }
 });
 
 chrome.tabs.onActivated.addListener(() => { showView("setup"); identifyCurrentPost(); });
@@ -280,4 +333,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (tabId === state.tabId && changeInfo.url) { showView("setup"); identifyCurrentPost(); }
 });
 
-identifyCurrentPost();
+async function initialize() {
+  const stored = await chrome.storage.local.get("winnerMessageTemplate");
+  state.winnerMessage = typeof stored.winnerMessageTemplate === "string"
+    ? stored.winnerMessageTemplate
+    : DEFAULT_WINNER_MESSAGE;
+  $("#winnerMessage").value = state.winnerMessage;
+  await identifyCurrentPost();
+}
+
+initialize();

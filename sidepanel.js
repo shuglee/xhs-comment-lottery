@@ -15,7 +15,9 @@ const $ = (selector) => document.querySelector(selector);
 const setupView = $("#setupView");
 const loadingView = $("#loadingView");
 const resultView = $("#resultView");
+const settingsView = $("#settingsView");
 const backButton = $("#backButton");
+const settingsButton = $("#settingsButton");
 const drawButton = $("#drawButton");
 const errorBox = $("#errorBox");
 
@@ -27,7 +29,10 @@ function showView(name) {
   setupView.classList.toggle("hidden", name !== "setup");
   loadingView.classList.toggle("hidden", name !== "loading");
   resultView.classList.toggle("hidden", name !== "result");
-  backButton.classList.toggle("hidden", name !== "result");
+  settingsView.classList.toggle("hidden", name !== "settings");
+  backButton.classList.toggle("hidden", name !== "result" && name !== "settings");
+  settingsButton.classList.toggle("hidden", name !== "setup");
+  backButton.setAttribute("aria-label", name === "settings" ? "返回抽奖" : "返回设置");
 }
 
 function setError(message = "") {
@@ -315,6 +320,7 @@ $("#winnerMessage").addEventListener("change", saveWinnerMessage);
 drawButton.addEventListener("click", () => { state.winnerCount = selectedCount(); performDraw({ recollect: true }); });
 $("#redrawButton").addEventListener("click", () => performDraw());
 backButton.addEventListener("click", () => showView("setup"));
+settingsButton.addEventListener("click", () => showView("settings"));
 $("#closeButton").addEventListener("click", () => {
   window.parent.postMessage({ type: "XHS_LOTTERY_CLOSE" }, "*");
 });

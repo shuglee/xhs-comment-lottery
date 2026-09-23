@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "小红书抽奖助手",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "从当前小红书帖子的一级评论中，按用户 ID 去重并随机抽取中奖者。",
   "icons": {
     "16": "icons/icon-16.png",

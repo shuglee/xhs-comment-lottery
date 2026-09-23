@@ -56,12 +56,18 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .setting-row strong { font-size: 14px; }
 .setting-row small { color: #8b929a; }
 .setting-row.disabled { color: #8b929a; background: #fafafa; }
+.settings-view { min-height: 360px; }
+.settings-heading { margin: 4px 0 24px; }
+.settings-heading h1 { margin: 0 0 7px; font-size: 22px; }
+.settings-heading p { margin: 0; color: #747c85; font-size: 13px; line-height: 1.5; }
 .message-section textarea { width: 100%; min-height: 92px; padding: 11px 12px; resize: vertical; border: 1px solid #dfe2e6; border-radius: 10px; color: #252a30; background: #fff; line-height: 1.55; outline: none; }
 .message-section textarea:hover { border-color: #c7cbd1; }
 .message-section textarea:focus { border-color: #ff2442; box-shadow: 0 0 0 3px rgba(255,36,66,.1); }
 .message-section textarea::placeholder { color: #9aa0a7; }
 .field-meta { min-height: 18px; margin-top: 6px; display: flex; justify-content: space-between; gap: 10px; color: #818891; font-size: 11px; line-height: 1.45; }
 #messageSaveStatus { flex: 0 0 auto; color: #18a963; }
+.settings-note { display: flex; align-items: center; gap: 5px; margin: 14px 0 0; color: #8a9199; font-size: 11px; }
+.settings-note svg { width: 13px; height: 13px; flex: 0 0 auto; }
 #followersOnly { width: 42px; height: 24px; margin: 0; appearance: none; border-radius: 13px; background: #d9dde2; position: relative; cursor: pointer; transition: background .18s ease; }
 #followersOnly::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(20,24,28,.22); transition: transform .18s ease; }
 #followersOnly:checked { background: #ff2442; }
